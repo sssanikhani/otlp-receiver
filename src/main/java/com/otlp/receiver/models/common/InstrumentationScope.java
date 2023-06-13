@@ -13,7 +13,7 @@ public class InstrumentationScope extends AbstractPersistable<Long> {
 
     @OneToMany(mappedBy = "instrumentationScope")
     private Set<InstrumentationScopeAttribute> attributes;
-    private long droppedAttributesCount = 0;
+    private Long droppedAttributesCount = 0L;
 
     @OneToMany(mappedBy = "instrumentationScope")
     private Set<ScopeLog> scopeLogs;
@@ -42,11 +42,11 @@ public class InstrumentationScope extends AbstractPersistable<Long> {
         this.attributes = attributes;
     }
 
-    public long getDroppedAttributesCount() {
+    public Long getDroppedAttributesCount() {
         return droppedAttributesCount;
     }
 
-    public void setDroppedAttributesCount(long droppedAttributesCount) {
+    public void setDroppedAttributesCount(Long droppedAttributesCount) {
         this.droppedAttributesCount = droppedAttributesCount;
     }
 

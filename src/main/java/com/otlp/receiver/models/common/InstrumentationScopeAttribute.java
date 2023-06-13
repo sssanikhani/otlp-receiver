@@ -1,12 +1,22 @@
 package com.otlp.receiver.models.common;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class InstrumentationScopeAttribute extends BaseKeyValue{
+public class InstrumentationScopeAttribute extends BaseAttribute {
+    @JoinColumn(nullable = false)
     @ManyToOne
     private InstrumentationScope instrumentationScope;
+
+    public InstrumentationScopeAttribute(String key, String value, InstrumentationScope instrumentationScope) {
+        super(key, value);
+        this.instrumentationScope = instrumentationScope;
+    }
+
+    public InstrumentationScopeAttribute() {
+    }
 
     public InstrumentationScope getInstrumentationScope() {
         return instrumentationScope;

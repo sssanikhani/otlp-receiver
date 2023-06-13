@@ -13,15 +13,15 @@ public class LogRecord extends AbstractPersistable<Long> {
     private SeverityNumber severityNumber = SeverityNumber.SEVERITY_NUMBER_UNSPECIFIED;
 
     @Column(nullable = false)
-    private long timeUnixNano = 0;
+    private Long timeUnixNano = 0L;
     @Column(nullable = false)
-    private long observedTimeUnixNano = 0;
+    private Long observedTimeUnixNano = 0L;
     private String severityText;
     private String body;
 
     @OneToMany(mappedBy = "logRecord")
     private Set<LogRecordAttribute> attributes;
-    private long droppedAttributesCount = 0;
+    private Long droppedAttributesCount = 0L;
 
     @Column(nullable = false)
     private int flags;
@@ -43,19 +43,19 @@ public class LogRecord extends AbstractPersistable<Long> {
         this.severityNumber = severityNumber;
     }
 
-    public long getTimeUnixNano() {
+    public Long getTimeUnixNano() {
         return timeUnixNano;
     }
 
-    public void setTimeUnixNano(long timeUnixNano) {
+    public void setTimeUnixNano(Long timeUnixNano) {
         this.timeUnixNano = timeUnixNano;
     }
 
-    public long getObservedTimeUnixNano() {
+    public Long getObservedTimeUnixNano() {
         return observedTimeUnixNano;
     }
 
-    public void setObservedTimeUnixNano(long observedTimeUnixNano) {
+    public void setObservedTimeUnixNano(Long observedTimeUnixNano) {
         this.observedTimeUnixNano = observedTimeUnixNano;
     }
 
@@ -83,11 +83,11 @@ public class LogRecord extends AbstractPersistable<Long> {
         this.attributes = attributes;
     }
 
-    public long getDroppedAttributesCount() {
+    public Long getDroppedAttributesCount() {
         return droppedAttributesCount;
     }
 
-    public void setDroppedAttributesCount(long droppedAttributesCount) {
+    public void setDroppedAttributesCount(Long droppedAttributesCount) {
         this.droppedAttributesCount = droppedAttributesCount;
     }
 

@@ -9,7 +9,10 @@ public class Resource extends AbstractPersistable<Long> {
 
     @OneToMany(mappedBy = "resource")
     private Set<ResourceAttribute> attributes;
-    private long droppedAttributesCount = 0;
+    private Long droppedAttributesCount = 0L;
+
+    public Resource() {
+    }
 
     public Set<ResourceAttribute> getAttributes() {
         return attributes;
@@ -19,11 +22,11 @@ public class Resource extends AbstractPersistable<Long> {
         this.attributes = attributes;
     }
 
-    public long getDroppedAttributesCount() {
+    public Long getDroppedAttributesCount() {
         return droppedAttributesCount;
     }
 
-    public void setDroppedAttributesCount(long droppedAttributesCount) {
+    public void setDroppedAttributesCount(Long droppedAttributesCount) {
         this.droppedAttributesCount = droppedAttributesCount;
     }
 }
