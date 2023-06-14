@@ -23,6 +23,9 @@ public class LogRecord extends AbstractPersistable<Long> {
     private Set<LogRecordAttribute> attributes;
     private Long droppedAttributesCount = 0L;
 
+    public LogRecord() {
+    }
+
     public LogRecord(SeverityNumber severityNumber, Long timeUnixNano,
                      Long observedTimeUnixNano, String severityText, String body,
                      Long droppedAttributesCount, int flags, byte[] traceId, byte[] spanId, ScopeLog scopeLog) {
@@ -41,10 +44,8 @@ public class LogRecord extends AbstractPersistable<Long> {
     @Column(nullable = false)
     private int flags;
 
-    @Lob
     private byte[] traceId;
 
-    @Lob
     private byte[] spanId;
 
     @ManyToOne

@@ -8,7 +8,7 @@ import org.apache.commons.codec.binary.Hex;
 import java.util.*;
 
 public class DataNormalizer {
-    private final static List<String> BYTES_TYPE_KEYS = Arrays.asList("traceId", "spanId", "parentSpanId");
+    private final static List<String> BYTES_TYPE_KEYS = Arrays.asList("traceId", "trace_id", "spanId", "span_id", "parentSpanId", "parent_span_id");
     private static HashMap<String, Object> deepReplaceTraceIDAndSpanIDs(HashMap<String, Object> data) throws DecoderException {
         for (String key: data.keySet()) {
             if (data.get(key) instanceof Map<?,?>) {
