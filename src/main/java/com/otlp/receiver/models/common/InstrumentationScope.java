@@ -1,7 +1,8 @@
 package com.otlp.receiver.models.common;
 
 import com.otlp.receiver.models.logs.ScopeLog;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.Set;
@@ -17,6 +18,14 @@ public class InstrumentationScope extends AbstractPersistable<Long> {
 
     @OneToMany(mappedBy = "instrumentationScope")
     private Set<ScopeLog> scopeLogs;
+
+    public InstrumentationScope(String name, String version) {
+        this.name = name;
+        this.version = version;
+    }
+
+    public InstrumentationScope() {
+    }
 
     public String getName() {
         return name;

@@ -1,11 +1,10 @@
 package com.otlp.receiver.models.resources;
 
 import com.otlp.receiver.models.common.BaseAttribute;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"resource_id", "key"}))
 public class ResourceAttribute extends BaseAttribute {
     @JoinColumn(nullable = false)
     @ManyToOne

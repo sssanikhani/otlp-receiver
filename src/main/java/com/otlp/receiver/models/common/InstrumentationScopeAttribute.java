@@ -1,10 +1,9 @@
 package com.otlp.receiver.models.common;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"instrumentationscope_id", "key"}))
 public class InstrumentationScopeAttribute extends BaseAttribute {
     @JoinColumn(nullable = false)
     @ManyToOne

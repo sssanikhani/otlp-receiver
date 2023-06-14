@@ -1,8 +1,10 @@
 package com.otlp.receiver.models.resources;
 
-import java.util.Set;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import org.springframework.data.jpa.domain.AbstractPersistable;
+
+import java.util.Set;
 
 @Entity
 public class Resource extends AbstractPersistable<Long> {

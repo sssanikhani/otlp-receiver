@@ -22,6 +22,15 @@ public class ScopeLog extends AbstractPersistable<Long> {
     @ManyToOne
     private ResourceLog resourceLog;
 
+    public ScopeLog() {
+    }
+
+    public ScopeLog(InstrumentationScope instrumentationScope, String schemaUrl, ResourceLog resourceLog) {
+        this.instrumentationScope = instrumentationScope;
+        this.schemaUrl = schemaUrl;
+        this.resourceLog = resourceLog;
+    }
+
     public InstrumentationScope getInstrumentationScope() {
         return instrumentationScope;
     }

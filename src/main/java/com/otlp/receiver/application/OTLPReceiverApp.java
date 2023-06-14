@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = { "com.otlp.receiver.controllers", "com.otlp.receiver.application" })
 public class OTLPReceiverApp {
 
-    private static final JPAService jpaService = JPAService.getInstance();
+    public static final JPAService jpaService = JPAService.getInstance();
     public static void main(String... args) {
         SpringApplication.run(OTLPReceiverApp.class, args);
     }

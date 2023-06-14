@@ -4,6 +4,7 @@ import com.otlp.receiver.models.common.BaseAttribute;
 import jakarta.persistence.*;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"logrecord_id", "key"}))
 public class LogRecordAttribute extends BaseAttribute {
     @JoinColumn(nullable = false)
     @ManyToOne

@@ -8,7 +8,10 @@ import java.util.Objects;
 @MappedSuperclass
 public class BaseAttribute {
     @Id
-    @Column(nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
+
+    @Column(nullable = false)
     String key;
     @Column(nullable = false)
     String value;

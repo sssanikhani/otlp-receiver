@@ -18,6 +18,14 @@ public class ResourceLog extends AbstractPersistable<Long> {
 
     private String schemaUrl;
 
+    public ResourceLog() {
+    }
+
+    public ResourceLog(Resource resource, String schemaUrl) {
+        this.resource = resource;
+        this.schemaUrl = schemaUrl;
+    }
+
     public Resource getResource() {
         return resource;
     }

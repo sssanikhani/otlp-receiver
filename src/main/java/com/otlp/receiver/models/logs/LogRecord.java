@@ -23,6 +23,21 @@ public class LogRecord extends AbstractPersistable<Long> {
     private Set<LogRecordAttribute> attributes;
     private Long droppedAttributesCount = 0L;
 
+    public LogRecord(SeverityNumber severityNumber, Long timeUnixNano,
+                     Long observedTimeUnixNano, String severityText, String body,
+                     Long droppedAttributesCount, int flags, byte[] traceId, byte[] spanId, ScopeLog scopeLog) {
+        this.severityNumber = severityNumber;
+        this.timeUnixNano = timeUnixNano;
+        this.observedTimeUnixNano = observedTimeUnixNano;
+        this.severityText = severityText;
+        this.body = body;
+        this.droppedAttributesCount = droppedAttributesCount;
+        this.flags = flags;
+        this.traceId = traceId;
+        this.spanId = spanId;
+        this.scopeLog = scopeLog;
+    }
+
     @Column(nullable = false)
     private int flags;
 
