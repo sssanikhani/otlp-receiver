@@ -7,13 +7,16 @@ import com.otlp.receiver.utils.Jsonizer;
 import com.otlp.receiver.utils.ObjectPersister;
 import io.opentelemetry.proto.common.v1.KeyValue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventService {
-    private static void persistAttributes(List<KeyValue> attributes, Event event) {
-        for (KeyValue attribute : attributes) {
-            ObjectPersister.persist(new EventAttribute(attribute.getKey(), Jsonizer.jsonize(attribute.getValue()), event));
+    private static void persistAttributes(List<KeyValue> attributesM, Event event) {
+        List<Object> attributes = new ArrayList<>();
+        for (KeyValue attribute : attributesM) {
+            attributes.add(new EventAttribute(attribute.getKey(), Jsonizer.jsonize(attribute.getValue()), event));
         }
+        ObjectPersister.persistBatch(attributes);
     }
 
     private static void persistEvent(io.opentelemetry.proto.trace.v1.Span.Event eventM, Span span) {

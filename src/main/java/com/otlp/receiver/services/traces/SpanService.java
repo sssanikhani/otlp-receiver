@@ -1,6 +1,5 @@
 package com.otlp.receiver.services.traces;
 
-import com.google.gson.Gson;
 import com.otlp.receiver.application.OTLPReceiverApp;
 import com.otlp.receiver.models.traces.*;
 import com.otlp.receiver.utils.Exceptions;
@@ -8,6 +7,7 @@ import com.otlp.receiver.utils.Jsonizer;
 import com.otlp.receiver.utils.ObjectPersister;
 import io.opentelemetry.proto.common.v1.KeyValue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SpanService {
@@ -22,23 +22,28 @@ public class SpanService {
         }
     }
 
-    private static void persistAttributes(List<KeyValue> attributes, Span span) {
-        Gson  gson = new Gson();
-        for (KeyValue attribute : attributes) {
-            ObjectPersister.persist(new SpanAttribute(attribute.getKey(), Jsonizer.jsonize(attribute.getValue()), span));
+    private static void persistAttributes(List<KeyValue> attributesM, Span span) {
+        List<Object> attributes = new ArrayList<>();
+        for (KeyValue attribute : attributesM) {
+            attributes.add(new SpanAttribute(attribute.getKey(), Jsonizer.jsonize(attribute.getValue()), span));
         }
+        ObjectPersister.persistBatch(attributes);
     }
 
-    private static void persistScopeAttributes(List<KeyValue> attributes, Span span) {
-        for (KeyValue attr : attributes) {
-            ObjectPersister.persist(new SpanScopeAttribute(attr.getKey(), Jsonizer.jsonize(attr.getValue()), span));
+    private static void persistScopeAttributes(List<KeyValue> attributesM, Span span) {
+        List<Object> attributes = new ArrayList<>();
+        for (KeyValue attr : attributesM) {
+            attributes.add(new SpanScopeAttribute(attr.getKey(), Jsonizer.jsonize(attr.getValue()), span));
         }
+        ObjectPersister.persistBatch(attributes);
     }
 
-    private static void persistResourceAttributes(List<KeyValue> attributes, Span span) {
-        for (KeyValue attr : attributes) {
-            ObjectPersister.persist(new SpanResourceAttribute(attr.getKey(), Jsonizer.jsonize(attr.getValue()), span));
+    private static void persistResourceAttributes(List<KeyValue> attributesM, Span span) {
+        List<Object> attributes = new ArrayList<>();
+        for (KeyValue attr : attributesM) {
+            attributes.add(new SpanResourceAttribute(attr.getKey(), Jsonizer.jsonize(attr.getValue()), span));
         }
+        ObjectPersister.persistBatch(attributes);
     }
 
     public static Span persistSpan(io.opentelemetry.proto.trace.v1.Span spanM, io.opentelemetry.proto.trace.v1.ScopeSpans scopeSpanM, io.opentelemetry.proto.trace.v1.ResourceSpans resourceSpanM) throws Exceptions.ValidationError {

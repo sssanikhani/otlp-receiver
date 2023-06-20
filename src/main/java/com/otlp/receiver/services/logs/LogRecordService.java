@@ -12,25 +12,32 @@ import com.otlp.receiver.utils.Jsonizer;
 import com.otlp.receiver.utils.ObjectPersister;
 import io.opentelemetry.proto.common.v1.KeyValue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LogRecordService {
-    private static void persistAttributes(List<KeyValue> attributes, LogRecord logRecord) {
-        for (KeyValue attribute : attributes) {
-            ObjectPersister.persist(new LogRecordAttribute(attribute.getKey(), Jsonizer.jsonize(attribute.getValue()), logRecord));
+    private static void persistAttributes(List<KeyValue> attributesM, LogRecord logRecord) {
+        List<Object> attributes = new ArrayList<>();
+        for (KeyValue attribute : attributesM) {
+            attributes.add(new LogRecordAttribute(attribute.getKey(), Jsonizer.jsonize(attribute.getValue()), logRecord));
         }
+        ObjectPersister.persistBatch(attributes);
     }
 
-    private static void persistScopeAttributes(List<KeyValue> attributes, LogRecord logRecord) {
-        for (KeyValue attr : attributes) {
-            ObjectPersister.persist(new LogScopeAttribute(attr.getKey(), Jsonizer.jsonize(attr.getValue()), logRecord));
+    private static void persistScopeAttributes(List<KeyValue> attributesM, LogRecord logRecord) {
+        List<Object> attributes = new ArrayList<>();
+        for (KeyValue attr : attributesM) {
+            attributes.add(new LogScopeAttribute(attr.getKey(), Jsonizer.jsonize(attr.getValue()), logRecord));
         }
+        ObjectPersister.persistBatch(attributes);
     }
 
-    private static void persistResourceAttributes(List<KeyValue> attributes, LogRecord logRecord) {
-        for (KeyValue attr : attributes) {
-            ObjectPersister.persist(new LogResourceAttribute(attr.getKey(), Jsonizer.jsonize(attr.getValue()), logRecord));
+    private static void persistResourceAttributes(List<KeyValue> attributesM, LogRecord logRecord) {
+        List<Object> attributes = new ArrayList<>();
+        for (KeyValue attr : attributesM) {
+            attributes.add(new LogResourceAttribute(attr.getKey(), Jsonizer.jsonize(attr.getValue()), logRecord));
         }
+        ObjectPersister.persistBatch(attributes);
     }
 
     public static void persistLogRecord(

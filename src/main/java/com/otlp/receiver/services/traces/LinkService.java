@@ -8,13 +8,16 @@ import com.otlp.receiver.utils.Jsonizer;
 import com.otlp.receiver.utils.ObjectPersister;
 import io.opentelemetry.proto.common.v1.KeyValue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LinkService {
-    private static void persistAttributes(List<KeyValue> attributes, Link link) {
-        for (KeyValue attribute : attributes) {
-            ObjectPersister.persist(new LinkAttribute(attribute.getKey(), Jsonizer.jsonize(attribute.getValue()), link));
+    private static void persistAttributes(List<KeyValue> attributesM, Link link) {
+        List<Object> attributes = new ArrayList<>();
+        for (KeyValue attribute : attributesM) {
+            attributes.add(new LinkAttribute(attribute.getKey(), Jsonizer.jsonize(attribute.getValue()), link));
         }
+        ObjectPersister.persistBatch(attributes);
     }
 
     private static void persistLink(io.opentelemetry.proto.trace.v1.Span.Link linkM, Span from) throws Exceptions.ValidationError {
