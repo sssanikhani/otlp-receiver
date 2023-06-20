@@ -1,24 +1,27 @@
 package com.otlp.receiver.models.common;
 
 import jakarta.persistence.*;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.Objects;
 
 
 @MappedSuperclass
-public class BaseAttribute {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
-
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"parent_id", "key"}))
+public class BaseAttribute<T> extends AbstractPersistable<Long> {
     @Column(nullable = false)
-    String key;
+    private String key;
     @Column(nullable = false)
-    String value;
+    private String value;
 
-    public BaseAttribute(String key, String value) {
+    @JoinColumn(nullable = false)
+    @ManyToOne
+    private T parent;
+
+    public BaseAttribute(String key, String value, T parent) {
         this.key = key;
         this.value = value;
+        this.parent = parent;
     }
 
     public BaseAttribute() {
@@ -41,12 +44,21 @@ public class BaseAttribute {
         this.value = value;
     }
 
+    public T getParent() {
+        return parent;
+    }
+
+    public void setParent(T parent) {
+        this.parent = parent;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BaseAttribute that = (BaseAttribute) o;
-        return key.equals(that.key) && Objects.equals(value, that.value);
+        if (getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        BaseAttribute<?> that = (BaseAttribute<?>) o;
+        return key.equals(that.key) && Objects.equals(value, that.value) && parent.equals(that.parent);
     }
 
     @Override

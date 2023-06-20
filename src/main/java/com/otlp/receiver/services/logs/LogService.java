@@ -1,38 +1,28 @@
 package com.otlp.receiver.services.logs;
 
-import com.otlp.receiver.models.logs.ResourceLog;
-import com.otlp.receiver.models.resources.Resource;
-import com.otlp.receiver.services.ResourceService;
 import com.otlp.receiver.services.Result;
 import com.otlp.receiver.utils.Exceptions;
-import com.otlp.receiver.utils.ObjectPersister;
 import io.opentelemetry.proto.collector.logs.v1.ExportLogsPartialSuccess;
 import io.opentelemetry.proto.collector.logs.v1.ExportLogsServiceRequest;
 import io.opentelemetry.proto.collector.logs.v1.ExportLogsServiceResponse;
-import io.opentelemetry.proto.logs.v1.ResourceLogs;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.StringJoiner;
 
-public class ResourceLogService {
+public class LogService {
     private static void validateResourceLog(io.opentelemetry.proto.logs.v1.ResourceLogs resourceLog)
             throws Exceptions.ValidationError, Exceptions.ValidationWarning {
-        return; // TODO: validate data
+        // TODO: validate data
     }
 
-    private static void persistScopeLogs(List<io.opentelemetry.proto.logs.v1.ScopeLogs> scopeLogs, ResourceLog resourceLog) {
-        for (io.opentelemetry.proto.logs.v1.ScopeLogs scopeLog : scopeLogs) {
-            ScopeLogService.persistScopeLog(scopeLog, resourceLog);
+    private static void persistResourceLogData(io.opentelemetry.proto.logs.v1.ResourceLogs resourceLogM) {
+        for (io.opentelemetry.proto.logs.v1.ScopeLogs scopeLogM : resourceLogM.getScopeLogsList()) {
+            for (io.opentelemetry.proto.logs.v1.LogRecord logRecordM : scopeLogM.getLogRecordsList()) {
+                LogRecordService.persistLogRecord(logRecordM, scopeLogM, resourceLogM);
+            }
         }
-    }
-
-    private static void persistResourceLog(ResourceLogs resourceLogM) {
-        Resource resource = ResourceService.persistResource(resourceLogM.getResource());
-        ResourceLog resourceLog = new ResourceLog(resource, resourceLogM.getSchemaUrl());
-        ObjectPersister.persist(resourceLog);
-        persistScopeLogs(resourceLogM.getScopeLogsList(), resourceLog);
     }
 
     @Contract("_ -> new")
@@ -42,11 +32,11 @@ public class ResourceLogService {
         } catch (Exceptions.ValidationError error) {
             return new Result(Result.Type.FAILURE, error.getMessage());
         } catch (Exceptions.ValidationWarning warning) {
-            persistResourceLog(resourceLog);
+            persistResourceLogData(resourceLog);
             return new Result(Result.Type.WARNING, warning.getMessage());
         }
 
-        persistResourceLog(resourceLog);
+        persistResourceLogData(resourceLog);
         return new Result(Result.Type.SUCCESS, "");
     }
 

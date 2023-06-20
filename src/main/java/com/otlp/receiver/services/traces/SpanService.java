@@ -1,0 +1,67 @@
+package com.otlp.receiver.services.traces;
+
+import com.google.gson.Gson;
+import com.otlp.receiver.application.OTLPReceiverApp;
+import com.otlp.receiver.models.traces.*;
+import com.otlp.receiver.utils.Exceptions;
+import com.otlp.receiver.utils.Jsonizer;
+import com.otlp.receiver.utils.ObjectPersister;
+import io.opentelemetry.proto.common.v1.KeyValue;
+
+import java.util.List;
+
+public class SpanService {
+    public static Span getSpan(byte[] spanId) {
+        try {
+            return OTLPReceiverApp.jpaService.runInTransaction(entityManager -> entityManager.createQuery(
+                            "select s from Span s where s.spanId = :id", Span.class
+                    ).setParameter("id", spanId).getSingleResult()
+            );
+        } catch (jakarta.persistence.NoResultException e) {
+            return null;
+        }
+    }
+
+    private static void persistAttributes(List<KeyValue> attributes, Span span) {
+        Gson  gson = new Gson();
+        for (KeyValue attribute : attributes) {
+            ObjectPersister.persist(new SpanAttribute(attribute.getKey(), Jsonizer.jsonize(attribute.getValue()), span));
+        }
+    }
+
+    private static void persistScopeAttributes(List<KeyValue> attributes, Span span) {
+        for (KeyValue attr : attributes) {
+            ObjectPersister.persist(new SpanScopeAttribute(attr.getKey(), Jsonizer.jsonize(attr.getValue()), span));
+        }
+    }
+
+    private static void persistResourceAttributes(List<KeyValue> attributes, Span span) {
+        for (KeyValue attr : attributes) {
+            ObjectPersister.persist(new SpanResourceAttribute(attr.getKey(), Jsonizer.jsonize(attr.getValue()), span));
+        }
+    }
+
+    public static Span persistSpan(io.opentelemetry.proto.trace.v1.Span spanM, io.opentelemetry.proto.trace.v1.ScopeSpans scopeSpanM, io.opentelemetry.proto.trace.v1.ResourceSpans resourceSpanM) throws Exceptions.ValidationError {
+        Trace trace = TraceService.getOrCreateTrace(spanM.getTraceId().toByteArray(), spanM.getTraceState());
+        Span parent = null;
+        if (!spanM.getParentSpanId().isEmpty()) {
+            parent = getSpan(spanM.getParentSpanId().toByteArray());
+            if (parent == null)
+                throw new Exceptions.ValidationError(String.format("parent span %s not found for span with id %s", spanM.getParentSpanId(), spanM.getSpanId()));
+        }
+        Span span = new Span(scopeSpanM.getScope().getName(), scopeSpanM.getScope().getVersion(),
+                resourceSpanM.getSchemaUrl(), scopeSpanM.getSchemaUrl(), trace, spanM.getSpanId().toByteArray(),
+                parent, spanM.getName(), spanM.getKind(), spanM.getStartTimeUnixNano(), spanM.getEndTimeUnixNano(),
+                spanM.getStatus().getMessage(), spanM.getStatus().getCode());
+        ObjectPersister.persist(span);
+
+        persistAttributes(spanM.getAttributesList(), span);
+        persistScopeAttributes(scopeSpanM.getScope().getAttributesList(), span);
+        persistResourceAttributes(resourceSpanM.getResource().getAttributesList(), span);
+
+        LinkService.persistBatch(spanM.getLinksList(), span);
+        EventService.persistBatch(spanM.getEventsList(), span);
+
+        return span;
+    }
+}

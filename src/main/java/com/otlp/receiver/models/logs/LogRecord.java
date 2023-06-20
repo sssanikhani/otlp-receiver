@@ -1,13 +1,15 @@
 package com.otlp.receiver.models.logs;
 
+import com.otlp.receiver.models.common.BaseSignal;
+import com.otlp.receiver.models.traces.Span;
+import com.otlp.receiver.models.traces.Trace;
 import io.opentelemetry.proto.logs.v1.SeverityNumber;
 import jakarta.persistence.*;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.Set;
 
 @Entity
-public class LogRecord extends AbstractPersistable<Long> {
+public class LogRecord extends BaseSignal<LogResourceAttribute, LogScopeAttribute> {
     @Enumerated
     @Column(nullable = false)
     private SeverityNumber severityNumber = SeverityNumber.SEVERITY_NUMBER_UNSPECIFIED;
@@ -19,37 +21,34 @@ public class LogRecord extends AbstractPersistable<Long> {
     private String severityText;
     private String body;
 
-    @OneToMany(mappedBy = "logRecord")
+    @OneToMany(mappedBy = "parent")
     private Set<LogRecordAttribute> attributes;
-    private Long droppedAttributesCount = 0L;
+
+    @ManyToOne
+    private Span span;
+
+    @ManyToOne
+    private Trace trace;
+
+    @Column(nullable = false)
+    private int flags;
 
     public LogRecord() {
     }
 
-    public LogRecord(SeverityNumber severityNumber, Long timeUnixNano,
-                     Long observedTimeUnixNano, String severityText, String body,
-                     Long droppedAttributesCount, int flags, byte[] traceId, byte[] spanId, ScopeLog scopeLog) {
+    public LogRecord(String scopeName, String scopeVersion, String resourceSchemaUrl,
+                     String schemaUrl, SeverityNumber severityNumber, Long timeUnixNano,
+                     Long observedTimeUnixNano, String severityText, String body, Span span, Trace trace, int flags) {
+        super(scopeName, scopeVersion, resourceSchemaUrl, schemaUrl);
         this.severityNumber = severityNumber;
         this.timeUnixNano = timeUnixNano;
         this.observedTimeUnixNano = observedTimeUnixNano;
         this.severityText = severityText;
         this.body = body;
-        this.droppedAttributesCount = droppedAttributesCount;
+        this.span = span;
+        this.trace = trace;
         this.flags = flags;
-        this.traceId = traceId;
-        this.spanId = spanId;
-        this.scopeLog = scopeLog;
     }
-
-    @Column(nullable = false)
-    private int flags;
-
-    private byte[] traceId;
-
-    private byte[] spanId;
-
-    @ManyToOne
-    private ScopeLog scopeLog;
 
     public SeverityNumber getSeverityNumber() {
         return severityNumber;
@@ -99,14 +98,6 @@ public class LogRecord extends AbstractPersistable<Long> {
         this.attributes = attributes;
     }
 
-    public Long getDroppedAttributesCount() {
-        return droppedAttributesCount;
-    }
-
-    public void setDroppedAttributesCount(Long droppedAttributesCount) {
-        this.droppedAttributesCount = droppedAttributesCount;
-    }
-
     public int getFlags() {
         return flags;
     }
@@ -115,27 +106,19 @@ public class LogRecord extends AbstractPersistable<Long> {
         this.flags = flags;
     }
 
-    public byte[] getTraceId() {
-        return traceId;
+    public Span getSpan() {
+        return span;
     }
 
-    public void setTraceId(byte[] traceId) {
-        this.traceId = traceId;
+    public void setSpan(Span span) {
+        this.span = span;
     }
 
-    public byte[] getSpanId() {
-        return spanId;
+    public Trace getTrace() {
+        return trace;
     }
 
-    public void setSpanId(byte[] spanId) {
-        this.spanId = spanId;
-    }
-
-    public ScopeLog getScopeLog() {
-        return scopeLog;
-    }
-
-    public void setScopeLog(ScopeLog scopeLog) {
-        this.scopeLog = scopeLog;
+    public void setTrace(Trace trace) {
+        this.trace = trace;
     }
 }

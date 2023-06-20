@@ -4,11 +4,11 @@ import com.otlp.receiver.models.common.BaseAttribute;
 import jakarta.persistence.*;
 
 @Entity
-public class LogRecordAttribute extends BaseAttribute<LogRecord> {
-    public LogRecordAttribute(String key, String value, LogRecord parent) {
+public class LogResourceAttribute extends BaseAttribute<LogRecord> {
+    public LogResourceAttribute(String key, String value, LogRecord parent) {
         super(key, value, parent);
     }
 
-    public LogRecordAttribute() {
+    public LogResourceAttribute() {
     }
 }
