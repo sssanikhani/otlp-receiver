@@ -1,10 +1,8 @@
 package com.otlp.receiver.models.metrics.histogram;
 
 import com.otlp.receiver.models.metrics.BaseHistogram;
-import com.otlp.receiver.models.metrics.Metric;
 import io.opentelemetry.proto.metrics.v1.AggregationTemporality;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 
 import java.util.Set;

@@ -1,7 +1,7 @@
 package com.otlp.receiver.controllers;
 
 
-import com.otlp.receiver.services.logs.LogService;
+import com.otlp.receiver.services.logs.LogsRequestService;
 import com.otlp.receiver.utils.Exceptions;
 import io.opentelemetry.proto.collector.logs.v1.ExportLogsServiceRequest;
 import io.opentelemetry.proto.collector.logs.v1.ExportLogsServiceResponse;
@@ -26,7 +26,7 @@ public class Logs {
 
         ExportLogsServiceResponse responseMessage = null;
         try {
-            responseMessage = LogService.processLogsRequest(requestMessage);
+            responseMessage = LogsRequestService.processLogsRequest(requestMessage);
         } catch (Exceptions.InvalidArguments e) {
             return ResponseEntity.badRequest().build();
         }

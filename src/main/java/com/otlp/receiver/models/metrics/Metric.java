@@ -1,10 +1,8 @@
 package com.otlp.receiver.models.metrics;
 
 import com.otlp.receiver.models.common.BaseSignal;
-import jakarta.persistence.*;
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
-import java.util.Set;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class Metric<RESOURCE_ATTR, SCOPE_ATTR> extends BaseSignal<RESOURCE_ATTR, SCOPE_ATTR> {

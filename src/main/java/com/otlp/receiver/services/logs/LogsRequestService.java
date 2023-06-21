@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class LogService {
+public class LogsRequestService {
     private static void validateResourceLog(io.opentelemetry.proto.logs.v1.ResourceLogs resourceLog)
             throws Exceptions.ValidationError, Exceptions.ValidationWarning {
         // TODO: validate data

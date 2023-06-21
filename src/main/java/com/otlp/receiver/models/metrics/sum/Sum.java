@@ -2,8 +2,6 @@ package com.otlp.receiver.models.metrics.sum;
 
 import com.otlp.receiver.models.metrics.Metric;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import java.util.Set;

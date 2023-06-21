@@ -1,6 +1,8 @@
 package com.otlp.receiver.controllers;
 
 
+import com.otlp.receiver.services.metrics.MetricsRequestService;
+import com.otlp.receiver.utils.Exceptions;
 import io.opentelemetry.proto.collector.metrics.v1.ExportMetricsServiceRequest;
 import io.opentelemetry.proto.collector.metrics.v1.ExportMetricsServiceResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,11 +24,11 @@ public class Metrics {
         ExportMetricsServiceRequest requestMessage = ExportMetricsServiceRequest.parseFrom(request.getInputStream());
 
         ExportMetricsServiceResponse responseMessage = null;
-//        try {
-//            responseMessage = MetricService.processMetricRequest(requestMessage);
-//        } catch (Exceptions.InvalidArguments e) {
-//            return ResponseEntity.badRequest().build();
-//        }
+        try {
+            responseMessage = MetricsRequestService.processMetricRequest(requestMessage);
+        } catch (Exceptions.InvalidArguments e) {
+            return ResponseEntity.badRequest().build();
+        }
 
         return ResponseEntity.ok(responseMessage);
     }

@@ -1,7 +1,7 @@
 package com.otlp.receiver.models.logs;
 
 import com.otlp.receiver.models.common.BaseAttribute;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 
 @Entity
 public class LogScopeAttribute extends BaseAttribute<LogRecord> {
