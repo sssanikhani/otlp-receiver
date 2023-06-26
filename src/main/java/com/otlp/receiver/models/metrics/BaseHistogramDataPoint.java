@@ -1,18 +1,20 @@
 package com.otlp.receiver.models.metrics;
 
 import jakarta.persistence.MappedSuperclass;
+import org.jetbrains.annotations.Nullable;
 
 @MappedSuperclass
 public class BaseHistogramDataPoint extends BaseDataPoint{
     private Long count = 0L;
-    private double sum = 0;
-    private double min;
-    private double max;
+    private Double sum;
+    private Double min;
+    private Double max;
 
     public BaseHistogramDataPoint() {
     }
 
-    public BaseHistogramDataPoint(Long count, double sum, double min, double max) {
+    public BaseHistogramDataPoint(Long timeUnixNano, @Nullable Long startTimeUnixNano, Integer flags, Long count, Double sum, Double min, Double max) {
+        super(timeUnixNano, startTimeUnixNano, flags);
         this.count = count;
         this.sum = sum;
         this.min = min;
@@ -27,27 +29,27 @@ public class BaseHistogramDataPoint extends BaseDataPoint{
         this.count = count;
     }
 
-    public double getSum() {
+    public Double getSum() {
         return sum;
     }
 
-    public void setSum(double sum) {
+    public void setSum(Double sum) {
         this.sum = sum;
     }
 
-    public double getMin() {
+    public Double getMin() {
         return min;
     }
 
-    public void setMin(double min) {
+    public void setMin(Double min) {
         this.min = min;
     }
 
-    public double getMax() {
+    public Double getMax() {
         return max;
     }
 
-    public void setMax(double max) {
+    public void setMax(Double max) {
         this.max = max;
     }
 }

@@ -1,30 +1,38 @@
 package com.otlp.receiver.models.metrics.exponential_histogram;
 
 import com.otlp.receiver.models.metrics.BaseHistogramDataPoint;
+import com.otlp.receiver.models.metrics.Exemplar;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 @Entity
 public class ExponentialHistogramDataPoint extends BaseHistogramDataPoint {
-    private int scale;
+    private Integer scale;
     private Long zeroCount;
-    private double zeroThreshold;
+    private Double zeroThreshold;
 
-    private int positiveBucketOffset;
+    private Integer positiveBucketOffset;
     private long[] positiveBucketCounts;
-    private int negativeBucketOffset;
+    private Integer negativeBucketOffset;
     private long[] negativeBucketCounts;
 
     @JoinColumn(nullable = false)
     @ManyToOne
     private ExponentialHistogram exponentialHistogram;
 
+    @OneToMany(mappedBy = "exponentialHistogramDataPoint")
+    private Set<Exemplar> exemplars;
+
     public ExponentialHistogramDataPoint() {
     }
 
-    public ExponentialHistogramDataPoint(Long count, double sum, double min, double max, int scale, Long zeroCount, double zeroThreshold, int positiveBucketOffset, long[] positiveBucketCounts, int negativeBucketOffset, long[] negativeBucketCounts, ExponentialHistogram exponentialHistogram) {
-        super(count, sum, min, max);
+    public ExponentialHistogramDataPoint(Long timeUnixNano, @Nullable Long startTimeUnixNano, Integer flags, Long count, Double sum, Double min, Double max, Integer scale, Long zeroCount, Double zeroThreshold, Integer positiveBucketOffset, long[] positiveBucketCounts, Integer negativeBucketOffset, long[] negativeBucketCounts, ExponentialHistogram exponentialHistogram) {
+        super(timeUnixNano, startTimeUnixNano, flags, count, sum, min, max);
         this.scale = scale;
         this.zeroCount = zeroCount;
         this.zeroThreshold = zeroThreshold;
@@ -35,11 +43,11 @@ public class ExponentialHistogramDataPoint extends BaseHistogramDataPoint {
         this.exponentialHistogram = exponentialHistogram;
     }
 
-    public int getScale() {
+    public Integer getScale() {
         return scale;
     }
 
-    public void setScale(int scale) {
+    public void setScale(Integer scale) {
         this.scale = scale;
     }
 
@@ -51,19 +59,19 @@ public class ExponentialHistogramDataPoint extends BaseHistogramDataPoint {
         this.zeroCount = zeroCount;
     }
 
-    public double getZeroThreshold() {
+    public Double getZeroThreshold() {
         return zeroThreshold;
     }
 
-    public void setZeroThreshold(double zeroThreshold) {
+    public void setZeroThreshold(Double zeroThreshold) {
         this.zeroThreshold = zeroThreshold;
     }
 
-    public int getPositiveBucketOffset() {
+    public Integer getPositiveBucketOffset() {
         return positiveBucketOffset;
     }
 
-    public void setPositiveBucketOffset(int positiveBucketOffset) {
+    public void setPositiveBucketOffset(Integer positiveBucketOffset) {
         this.positiveBucketOffset = positiveBucketOffset;
     }
 
@@ -75,11 +83,11 @@ public class ExponentialHistogramDataPoint extends BaseHistogramDataPoint {
         this.positiveBucketCounts = positiveBucketCounts;
     }
 
-    public int getNegativeBucketOffset() {
+    public Integer getNegativeBucketOffset() {
         return negativeBucketOffset;
     }
 
-    public void setNegativeBucketOffset(int negativeBucketOffset) {
+    public void setNegativeBucketOffset(Integer negativeBucketOffset) {
         this.negativeBucketOffset = negativeBucketOffset;
     }
 
@@ -97,5 +105,13 @@ public class ExponentialHistogramDataPoint extends BaseHistogramDataPoint {
 
     public void setExponentialHistogram(ExponentialHistogram exponentialHistogram) {
         this.exponentialHistogram = exponentialHistogram;
+    }
+
+    public Set<Exemplar> getExemplars() {
+        return exemplars;
+    }
+
+    public void setExemplars(Set<Exemplar> exemplars) {
+        this.exemplars = exemplars;
     }
 }

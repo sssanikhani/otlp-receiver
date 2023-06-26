@@ -17,8 +17,8 @@ import java.util.Set;
 
 @Entity
 public class Exemplar extends AbstractPersistable<Long> {
-    @OneToMany
-    private Set<ExemplarAttribute> attributes;
+    @OneToMany(mappedBy = "parent")
+    private Set<ExemplarFilteredAttribute> filteredAttributes;
 
     private Long timeUnixNano;
 
@@ -61,12 +61,12 @@ public class Exemplar extends AbstractPersistable<Long> {
         this.summaryDataPoint = summaryDataPoint;
     }
 
-    public Set<ExemplarAttribute> getAttributes() {
-        return attributes;
+    public Set<ExemplarFilteredAttribute> getFilteredAttributes() {
+        return filteredAttributes;
     }
 
-    public void setAttributes(Set<ExemplarAttribute> attributes) {
-        this.attributes = attributes;
+    public void setFilteredAttributes(Set<ExemplarFilteredAttribute> filteredAttributes) {
+        this.filteredAttributes = filteredAttributes;
     }
 
     public Long getTimeUnixNano() {

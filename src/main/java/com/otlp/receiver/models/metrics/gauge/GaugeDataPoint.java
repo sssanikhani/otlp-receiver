@@ -1,10 +1,14 @@
 package com.otlp.receiver.models.metrics.gauge;
 
+import com.otlp.receiver.models.metrics.Exemplar;
 import com.otlp.receiver.models.metrics.NumberDataPoint;
-import io.opentelemetry.proto.metrics.v1.Exemplar;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 @Entity
 public class GaugeDataPoint extends NumberDataPoint {
@@ -12,11 +16,14 @@ public class GaugeDataPoint extends NumberDataPoint {
     @ManyToOne
     private Gauge gauge;
 
+    @OneToMany(mappedBy = "gaugeDataPoint")
+    private Set<Exemplar> exemplars;
+
     public GaugeDataPoint() {
     }
 
-    public GaugeDataPoint(Exemplar.ValueCase valueType, double doubleValue, Long intValue, Gauge gauge) {
-        super(valueType, doubleValue, intValue);
+    public GaugeDataPoint(Long timeUnixNano, @Nullable Long startTimeUnixNano, Integer flags, io.opentelemetry.proto.metrics.v1.NumberDataPoint.ValueCase valueType, @Nullable Double doubleValue, @Nullable Long intValue, Gauge gauge) {
+        super(timeUnixNano, startTimeUnixNano, flags, valueType, doubleValue, intValue);
         this.gauge = gauge;
     }
 
@@ -26,5 +33,13 @@ public class GaugeDataPoint extends NumberDataPoint {
 
     public void setGauge(Gauge gauge) {
         this.gauge = gauge;
+    }
+
+    public Set<Exemplar> getExemplars() {
+        return exemplars;
+    }
+
+    public void setExemplars(Set<Exemplar> exemplars) {
+        this.exemplars = exemplars;
     }
 }

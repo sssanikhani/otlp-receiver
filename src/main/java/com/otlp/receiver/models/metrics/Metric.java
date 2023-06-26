@@ -6,7 +6,6 @@ import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class Metric<RESOURCE_ATTR, SCOPE_ATTR> extends BaseSignal<RESOURCE_ATTR, SCOPE_ATTR> {
-    @Column(unique = true)
     private String name;
     private String description;
     private String unit;

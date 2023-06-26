@@ -13,13 +13,10 @@ import java.util.List;
 import java.util.StringJoiner;
 
 public class MetricsRequestService {
-    private static void persistMetric(Metric metricM, ScopeMetrics scopeMetricM, ResourceMetrics resourceMetricM) {
-    }
-
     private static void persistResourceMetricData(io.opentelemetry.proto.metrics.v1.ResourceMetrics resourceMetricM) throws Exceptions.ValidationError, Exceptions.ValidationWarning {
         for (io.opentelemetry.proto.metrics.v1.ScopeMetrics scopeMetricM : resourceMetricM.getScopeMetricsList()) {
             for (io.opentelemetry.proto.metrics.v1.Metric metricM : scopeMetricM.getMetricsList()) {
-                persistMetric(metricM, scopeMetricM, resourceMetricM);
+                MetricService.persistMetric(metricM, scopeMetricM, resourceMetricM);
             }
         }
     }
